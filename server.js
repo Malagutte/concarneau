@@ -27,6 +27,7 @@ if(process.env.HTTP_PROXY) {
 
 // get all the tools we need
 var express      = require('express');
+var path         = require('path');
 var helmet       = require('helmet');
 var app          = express();
 var cookieParser = require('cookie-parser');
@@ -74,6 +75,12 @@ require('./config/passport')(passport); // pass passport for configuration
 
 // set up our express application
 app.use(helmet()); // set HTTP headers via Helmet
+
+// Serve React build for production
+if (process.env.NODE_ENV === 'production') {
+	app.use(express.static(path.join(__dirname, 'dist')));
+}
+
 app.set('view engine', 'ejs'); // set up ejs for templating
 
 if(!process.env.C9_PROJECT) {

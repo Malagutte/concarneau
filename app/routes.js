@@ -3,6 +3,7 @@ const {parse, stringify} = require('flatted/cjs');
 var crypto = require('crypto');
 var ejs = require('ejs');
 var mailer = require('./mailer');
+var path = require('path');
 
 //TODO: confirm e-mail before allowing into game
 
@@ -339,6 +340,23 @@ module.exports = function(app, passport, client) {
 		user.save(function(err) {
 			res.redirect('/profile');
 		});
+	});
+
+	// Catch-all handler for React Router (client-side routing)
+	// This should be the last route to avoid conflicts with API routes
+	app.get('*', function(req, res) {
+		// For API routes, return 404
+		if (req.path.startsWith('/auth') || req.path.startsWith('/api')) {
+			return res.status(404).send('Not Found');
+		}
+		
+		// For frontend routes, serve React app
+		if (process.env.NODE_ENV === 'production') {
+			res.sendFile(path.join(__dirname, '../dist/index.html'));
+		} else {
+			// In development, serve the homepage for SPA routes
+			res.render('index.ejs');
+		}
 	});
 };
 

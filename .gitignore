@@ -21,3 +21,7 @@ env.*.list
 
 data/
 .c9/
+
+# React build output
+dist/
+build/
