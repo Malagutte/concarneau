@@ -65,8 +65,11 @@ const connectWithRetry = () => {
 	mongoose.connect(configDB.url)
 		.then(() => console.log('connected to mongo'))
 		.catch((err) => {
-			console.error('mongo failed to connect', err);
-			setTimeout(connectWithRetry, 2500);
+			console.error('mongo failed to connect', err.message);
+			// Don't retry in development to avoid blocking the server
+			if (process.env.NODE_ENV !== 'development') {
+				setTimeout(connectWithRetry, 2500);
+			}
 		});
 }
 connectWithRetry();

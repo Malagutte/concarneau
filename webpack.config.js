@@ -50,12 +50,11 @@ module.exports = {
   devServer: {
     historyApiFallback: true,
     port: 3000,
-    proxy: {
-      '/auth': 'http://localhost:8080',
-      '/login': 'http://localhost:8080',
-      '/signup': 'http://localhost:8080',
-      '/api': 'http://localhost:8080',
-      '/socket.io': 'http://localhost:8080',
-    },
+    proxy: [
+      {
+        context: ['/auth', '/api', '/socket.io'],
+        target: 'http://localhost:8080',
+      }
+    ],
   },
 };
